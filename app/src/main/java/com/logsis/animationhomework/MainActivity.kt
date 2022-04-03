@@ -14,7 +14,7 @@ import android.widget.ImageView
 import java.lang.StrictMath.round
 
 class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
-    var isPlay = false;
+    var isFly = false;
     var aeroToStartAnimation: ObjectAnimator? = null
     var aeroplanTopPostition = 200f;
     lateinit var parashutView: ImageView
@@ -26,7 +26,8 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
     val verticalStep = 50f
     val verticalStepDuration: Long = 500
     val horizontalFlyDuration: Long = 8000
-    var parashutFlyDuration: Long = 4000
+    val parashutFlyDuration: Long = 4000
+    val parashutOffset = 100f
 
     lateinit var btnParashut: Button
     var isParashutEnabled = true
@@ -35,9 +36,7 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         parashutView = findViewById(R.id.parashut)
-        parashutView.left = 0
         aeroplanView = findViewById(R.id.aeroplan)
-
         btnParashut = findViewById(R.id.parashutBtn)
 
 
@@ -65,6 +64,9 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
             screenWidth = (aeroplanView.parent as View).width
             aeroplanView.visibility = View.VISIBLE
             aeroplanTopPostition = aeroplanView.top.toFloat()
+            parashutView.visibility = View.VISIBLE
+            parashutView.animate().x(screenWidth.toFloat()).setDuration(0).start();
+
 
             aeroToStartAnimation = ObjectAnimator.ofFloat(
                 aeroplanView,
@@ -79,10 +81,7 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
         }
     }
 
-    fun moveTop() {
-        aeroplanTopPostition -= verticalStep
-        aeroplanView.animate().setDuration(verticalStepDuration).y(aeroplanTopPostition).start()
-    }
+   
 
     fun makeParashut() {
         if (aeroplanView.visibility != View.VISIBLE) {
@@ -93,9 +92,10 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
         }
 
         isParashutEnabled = false
-        val aeroplanLeftPosition = round(aeroToStartAnimation?.animatedValue as Float)
+        val  aeroplanLeftPosition = round(aeroToStartAnimation?.animatedValue as Float)
         parashutView.visibility = View.VISIBLE
-        parashutView.left = aeroplanLeftPosition;
+
+        parashutView.animate().x(aeroplanLeftPosition + parashutOffset).setDuration(0).start();
         val parashutAnimation = ObjectAnimator.ofFloat(
             parashutView,
             View.TRANSLATION_Y,
@@ -109,18 +109,23 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
         parashutAnimation.addListener(this)
         parashutAnimation.start()
 
-    }
 
+    }
+    fun moveTop() {
+        aeroplanTopPostition -= verticalStep
+        aeroplanView.animate().setDuration(verticalStepDuration).y(aeroplanTopPostition).start()
+ 
+    }
     fun moveBottom() {
-        aeroplanTopPostition += 50f
-        aeroplanView.animate().setDuration(500).y(aeroplanTopPostition).start()
+        aeroplanTopPostition += verticalStep
+        aeroplanView.animate().setDuration(verticalStepDuration).y(aeroplanTopPostition).start()
     }
 
     fun startFly() {
-        isPlay = !isPlay;
+        isFly = !isFly;
 
         makeAeroAnimation();
-        if (isPlay) {
+        if (isFly) {
             findViewById<ImageView>(R.id.aeroplan).visibility = View.VISIBLE
             aeroToStartAnimation?.start()
 

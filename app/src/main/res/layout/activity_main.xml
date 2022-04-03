@@ -64,8 +64,8 @@
 
     <ImageView
         android:id="@+id/parashut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="35pt"
+        android:layout_height="35pt"
         android:visibility="gone"
 
         app:layout_constraintEnd_toEndOf="parent"
