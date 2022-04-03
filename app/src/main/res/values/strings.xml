@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AnimationHomeWork</string>
+    <string name="start_fly">Полетели</string>
+    <string name="end_fly">Остановились</string>
+    <string name="start_caption">Начать</string>
+    <string name="up_caption">Вверх</string>
+    <string name="bottom_caption">Вниз</string>
+    <string name="parashut_caption">Парашют</string>
+
+</resources>
